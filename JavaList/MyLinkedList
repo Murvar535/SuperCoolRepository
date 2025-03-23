@@ -1,0 +1,147 @@
+public class MyLinkedList<E> implements MyList<E> {
+    private static class Node<E> {
+        E element;
+        Node<E> next;
+        Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private Node<E> head;
+    private Node<E> tail;
+    private int size;
+
+    public MyLinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    @Override
+    public void add(E element) {
+        linkLast(element);
+    }
+
+    private void linkLast(E element) {
+        Node<E> newNode = new Node<>(tail, element, null);
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
+    }
+
+    @Override
+    public void add(int index, E element) {
+        checkIndexForAdd(index);
+        if (index == size) {
+            linkLast(element);
+        } else {
+            linkBefore(element, getNode(index));
+        }
+    }
+
+    private void linkBefore(E element, Node<E> node) {
+        Node<E> prev = node.prev;
+        Node<E> newNode = new Node<>(prev, element, node);
+        node.prev = newNode;
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public E get(int index) {
+        return getNode(index).element;
+    }
+
+    private Node<E> getNode(int index) {
+        checkIndex(index);
+        Node<E> current;
+        if (index < (size >> 1)) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    @Override
+    public E remove(int index) {
+        Node<E> nodeToRemove = getNode(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.element;
+    }
+
+    private void unlink(Node<E> node) {
+        Node<E> prev = node.prev;
+        Node<E> next = node.next;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+
+        node.element = null;
+        size--;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        Node<E> current = head;
+        while (current != null) {
+            sb.append(current.element);
+            if (current.next != null) sb.append(", ");
+            current = current.next;
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+}
