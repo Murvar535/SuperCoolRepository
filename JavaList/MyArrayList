@@ -1,0 +1,90 @@
+import java.util.Arrays;
+
+public class MyArrayList<E> implements MyList<E> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elements;
+    private int size;
+
+    public MyArrayList() {
+        this.elements = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
+    }
+
+    public MyArrayList(int initialCapacity) {
+        if (initialCapacity < 0) {
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+        }
+        this.elements = new Object[initialCapacity];
+        this.size = 0;
+    }
+
+    @Override
+    public void add(E element) {
+        if (size == elements.length) {
+            increaseCapacity();
+        }
+        elements[size++] = element;
+    }
+
+    @Override
+    public void add(int index, E element) {
+        checkIndexForAdd(index);
+        if (size == elements.length) {
+            increaseCapacity();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = element;
+        size++;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void increaseCapacity() {
+        int newCapacity = elements.length * 2;
+        elements = Arrays.copyOf(elements, newCapacity);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public E get(int index) {
+        checkIndex(index);
+        return (E) elements[index];
+    }
+
+    @Override
+    public E remove(int index) {
+        checkIndex(index);
+        E oldValue = get(index);
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numMoved);
+        }
+        elements[--size] = null;
+        return oldValue;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(Arrays.copyOf(elements, size));
+    }
+}
