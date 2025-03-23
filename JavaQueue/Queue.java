@@ -21,10 +21,7 @@ public class Queue<T> {
         size = 0;
     }
 
-    /**
-     * Добавляет элемент в конец очереди.
-     * @param element элемент для добавления
-     */
+
     public void enqueue(T element) {
         Node<T> newNode = new Node<>(element);
         if (isEmpty()) {
@@ -36,11 +33,7 @@ public class Queue<T> {
         size++;
     }
 
-    /**
-     * Удаляет и возвращает элемент из начала очереди.
-     * @return первый элемент очереди
-     * @throws NoSuchElementException если очередь пуста
-     */
+
     public T dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
@@ -54,11 +47,6 @@ public class Queue<T> {
         return data;
     }
 
-    /**
-     * Возвращает первый элемент очереди без удаления.
-     * @return первый элемент очереди
-     * @throws NoSuchElementException если очередь пуста
-     */
     public T peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
@@ -66,18 +54,11 @@ public class Queue<T> {
         return head.data;
     }
 
-    /**
-     * Проверяет, пуста ли очередь.
-     * @return true если очередь пуста, иначе false
-     */
+
     public boolean isEmpty() {
         return head == null;
     }
 
-    /**
-     * Возвращает текущий размер очереди.
-     * @return количество элементов в очереди
-     */
     public int size() {
         return size;
     }
